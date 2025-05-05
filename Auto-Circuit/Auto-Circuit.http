@@ -1,0 +1,6 @@
+@Auto_Circuit_HostAddress = http://localhost:5021
+
+GET {{Auto_Circuit_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
