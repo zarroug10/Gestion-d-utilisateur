@@ -1,11 +1,15 @@
-﻿using Auto_Circuit.Entities;
+﻿using Auto_Circuit.DTO;
+using Auto_Circuit.Entities.identity;
 using Auto_Circuit.Generics;
+
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace Auto_Circuit.Data.Repository;
 
-public class UserRepository(BaseRepository context)
+public class UserRepository(BaseRepository context, IMapper mapper)
 {
 
     public async Task<User> GetUserByIdAsync(string id)
@@ -27,9 +31,9 @@ public class UserRepository(BaseRepository context)
             throw new Exception("Server Error");
         }
     }
-    public async Task<IEnumerable<User>> GetAllUsersAsync()
+    public async Task<IEnumerable<UserDTo>> GetAllUsersAsync()
     {
-        return await context.GetData<User>().ToListAsync();
+        return await context.GetData<User>().AsNoTracking().ProjectTo<UserDTo>(mapper.ConfigurationProvider).ToListAsync();
     }
     public async Task AddUserAsync(User user)
     {

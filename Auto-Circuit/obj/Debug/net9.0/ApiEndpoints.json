@@ -64,6 +64,16 @@
   },
   {
     "ContainingType": "Auto_Circuit.Controllers.UserController",
+    "Method": "GetCurrentUser",
+    "RelativePath": "api/User/CurrentUser",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Auto_Circuit.Controllers.UserController",
     "Method": "DeleteUser",
     "RelativePath": "api/User/Delete",
     "HttpMethod": "DELETE",
@@ -81,7 +91,7 @@
   {
     "ContainingType": "Auto_Circuit.Controllers.UserController",
     "Method": "UpdateUser",
-    "RelativePath": "api/User/Update/{id}",
+    "RelativePath": "api/User/Update",
     "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
@@ -95,11 +105,6 @@
         "Name": "id",
         "Type": "System.String",
         "IsRequired": false
-      },
-      {
-        "Name": "id",
-        "Type": "",
-        "IsRequired": true
       }
     ],
     "ReturnTypes": []

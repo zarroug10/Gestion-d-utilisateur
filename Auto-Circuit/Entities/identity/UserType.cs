@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Auto_Circuit.Entities;
+namespace Auto_Circuit.Entities.identity;
 
 public class UserType
 {

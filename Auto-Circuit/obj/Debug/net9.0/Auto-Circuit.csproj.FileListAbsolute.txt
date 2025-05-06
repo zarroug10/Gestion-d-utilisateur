@@ -169,7 +169,6 @@ C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\obj\Debug\net
 C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\obj\Debug\net9.0\Auto-Circuit.pdb
 C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\obj\Debug\net9.0\Auto-Circuit.genruntimeconfig.cache
 C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\obj\Debug\net9.0\ref\Auto-Circuit.dll
-C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\bin\Debug\net9.0\System.Web.Mvc.dll
@@ -179,3 +178,6 @@ C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\bin\Debug\net
 C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\bin\Debug\net9.0\System.Web.WebPages.Razor.dll
 C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\bin\Debug\net9.0\System.Web.WebPages.dll
 C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\bin\Debug\net9.0\Microsoft.Web.Infrastructure.dll
+C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\bin\Debug\net9.0\AutoMapper.dll
+C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\obj\Debug\net9.0\Auto-Circuit.sourcelink.json
+C:\Users\AbdelhafidhZARROUG\source\repos\Auto-Circuit\Auto-Circuit\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

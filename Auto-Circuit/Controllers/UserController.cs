@@ -2,8 +2,11 @@
 
 using Auto_Circuit.Data.Repository;
 using Auto_Circuit.DTO;
-using Auto_Circuit.Entities;
+using Auto_Circuit.Entities.identity;
+using Auto_Circuit.Interfaces;
 using Auto_Circuit.Services;
+
+using AutoMapper;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,29 +21,34 @@ public class UserController : ControllerBase
 {
     private readonly UserRepository _userRepository;
     private readonly UserManager<User> _userManager;
-    private readonly EmailSenderService _emailSenderService;
+    private readonly IMapper _mapper;
+    private readonly ICurrentUser _currentUser;
 
     public UserController(
         UserRepository userRepository,
         UserManager<User> userManager,
-        EmailSenderService emailSenderService)
+        EmailSenderService emailSenderService,
+        IMapper mapper,
+        ICurrentUser currentUser)
     {
         _userRepository = userRepository;
         _userManager = userManager;
-        _emailSenderService = emailSenderService;
+        _mapper = mapper;
+        _currentUser = currentUser;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var users = await _userRepository.GetAllUsersAsync();
+
         return Ok(users);
     }
 
+    [HttpGet("CurrentUser")]
+    public IActionResult GetCurrentUser() => Ok(_currentUser.User);
 
-
-
-    [HttpPatch("Update/{id}")]
+    [HttpPatch("Update")]
     public async Task<IActionResult> UpdateUser(UpdateDTo updateDTo, [FromQuery] string id)
     {
         try
@@ -54,10 +62,7 @@ public class UserController : ControllerBase
             {
                 return NotFound();
             }
-            user.UserName = updateDTo.UserName;
-            user.Email = updateDTo.Email;
-            user.FirstName = updateDTo.FirstName;
-            user.LastName = updateDTo.LastName;
+            _mapper.Map(updateDTo, user);
             await _userManager.UpdateAsync(user);
             return NoContent();
         }

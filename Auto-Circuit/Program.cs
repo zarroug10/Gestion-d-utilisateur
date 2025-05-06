@@ -1,6 +1,8 @@
+using System.Reflection;
+
 using Auto_Circuit.Data;
 using Auto_Circuit.Data.Repository;
-using Auto_Circuit.Entities;
+using Auto_Circuit.Entities.identity;
 using Auto_Circuit.Generics;
 using Auto_Circuit.Interfaces;
 using Auto_Circuit.Services;
@@ -24,6 +26,7 @@ builder.Services.AddIdentity<User, Role>(
         opt.Password.RequireUppercase = true;
     })
     .AddEntityFrameworkStores<CircuitContext>()
+    .AddClaimsPrincipalFactory<ApplicationClaimsFactory>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddDbContext<CircuitContext>(options =>
@@ -33,9 +36,12 @@ builder.Services.AddScoped<BaseRepository>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped(typeof(IRepository), typeof(BaseRepository));
 builder.Services.AddTransient<EmailSenderService>();
+builder.Services.AddScoped<ICurrentUser, CurrentUserService>();
 
 
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

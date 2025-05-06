@@ -5,8 +5,10 @@ using System.Text.Encodings.Web;
 
 using Auto_Circuit.DTO;
 using Auto_Circuit.DTOs;
-using Auto_Circuit.Entities;
+using Auto_Circuit.Entities.identity;
 using Auto_Circuit.Services;
+
+using AutoMapper;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,14 +24,17 @@ public class AuthenticationController : ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly EmailSenderService _emailSenderService;
     private readonly SignInManager<User> _signInManager;
+    private readonly IMapper _mapper;
     public AuthenticationController(
         UserManager<User> userManager,
         SignInManager<User> signInManager,
-        EmailSenderService emailSenderService)
+        EmailSenderService emailSenderService,
+        IMapper mapper)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _emailSenderService = emailSenderService;
+        _mapper = mapper;
     }
 
     [HttpPost("Register")]
@@ -40,21 +45,16 @@ public class AuthenticationController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var user = new User
-        {
-            Id = Guid.NewGuid().ToString(),
-            UserName = signUpDto.UserName,
-            Email = signUpDto.Email,
-            FirstName = signUpDto.FirstName,
-            LastName = signUpDto.LastName
-        };
+        var user = _mapper.Map<User>(signUpDto);
+        user.Id = Guid.NewGuid().ToString();
 
         var result = await _userManager.CreateAsync(user, signUpDto.Password);
 
         if (result.Succeeded)
         {
             // Optional: assign role if needed and it exists
-            // await _userManager.AddToRoleAsync(user, UserType.Account.ToString());
+            //fix the userRole 
+            await _userManager.AddToRoleAsync(user, UserType.Account);
 
             try
             {
@@ -183,6 +183,16 @@ public class AuthenticationController : ControllerBase
 
         if (result.Succeeded)
         {
+            var userProperties = user.GetType().GetProperties();
+            foreach (var prop in userProperties)
+            {
+                var value = prop.GetValue(user);
+                if (value == null)
+                {
+                    Console.WriteLine($"{prop.Name} is null");
+                }
+            }
+
             await _signInManager.SignInAsync(user, isPersistent: loginDTo.RememberMe);
             return Ok(new { Success = true });
         }

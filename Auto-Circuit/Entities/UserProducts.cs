@@ -1,4 +1,6 @@
-﻿namespace Auto_Circuit.Entities;
+﻿using Auto_Circuit.Entities.identity;
+
+namespace Auto_Circuit.Entities;
 
 public class UserProducts
 {
