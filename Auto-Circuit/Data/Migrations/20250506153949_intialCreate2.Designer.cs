@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Auto_Circuit.Migrations
+namespace Auto_Circuit.Data.Migrations
 {
     [DbContext(typeof(CircuitContext))]
-    [Migration("20250502150147_intialMigrations")]
-    partial class intialMigrations
+    [Migration("20250506153949_intialCreate2")]
+    partial class intialCreate2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,7 +97,28 @@ namespace Auto_Circuit.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("Auto_Circuit.Entities.Role", b =>
+            modelBuilder.Entity("Auto_Circuit.Entities.UserProducts", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("UserId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("UserProducts");
+                });
+
+            modelBuilder.Entity("Auto_Circuit.Entities.identity.Role", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -122,9 +143,23 @@ namespace Auto_Circuit.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "Account",
+                            Name = "1",
+                            NormalizedName = "1"
+                        },
+                        new
+                        {
+                            Id = "Admin",
+                            Name = "2",
+                            NormalizedName = "2"
+                        });
                 });
 
-            modelBuilder.Entity("Auto_Circuit.Entities.User", b =>
+            modelBuilder.Entity("Auto_Circuit.Entities.identity.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -195,27 +230,6 @@ namespace Auto_Circuit.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("Auto_Circuit.Entities.UserProducts", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProductId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("UserId", "ProductId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("UserProducts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -298,11 +312,18 @@ namespace Auto_Circuit.Migrations
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(34)
+                        .HasColumnType("nvarchar(34)");
+
                     b.HasKey("UserId", "RoleId");
 
-                    b.HasIndex("RoleId");
-
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasDiscriminator().HasValue("IdentityUserRole<string>");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -324,18 +345,27 @@ namespace Auto_Circuit.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Auto_Circuit.Entities.identity.UserRole", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<string>");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasDiscriminator().HasValue("UserRole");
+                });
+
             modelBuilder.Entity("Auto_Circuit.Entities.UserProducts", b =>
                 {
                     b.HasOne("Auto_Circuit.Entities.Product", "Product")
                         .WithMany("UserProducts")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Auto_Circuit.Entities.User", "User")
+                    b.HasOne("Auto_Circuit.Entities.identity.User", "User")
                         .WithMany("UserProducts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -345,7 +375,7 @@ namespace Auto_Circuit.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Auto_Circuit.Entities.Role", null)
+                    b.HasOne("Auto_Circuit.Entities.identity.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -354,7 +384,7 @@ namespace Auto_Circuit.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Auto_Circuit.Entities.User", null)
+                    b.HasOne("Auto_Circuit.Entities.identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -363,22 +393,7 @@ namespace Auto_Circuit.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Auto_Circuit.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Auto_Circuit.Entities.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Auto_Circuit.Entities.User", null)
+                    b.HasOne("Auto_Circuit.Entities.identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -387,11 +402,30 @@ namespace Auto_Circuit.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Auto_Circuit.Entities.User", null)
+                    b.HasOne("Auto_Circuit.Entities.identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Auto_Circuit.Entities.identity.UserRole", b =>
+                {
+                    b.HasOne("Auto_Circuit.Entities.identity.Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Auto_Circuit.Entities.identity.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Auto_Circuit.Entities.Product", b =>
@@ -399,9 +433,16 @@ namespace Auto_Circuit.Migrations
                     b.Navigation("UserProducts");
                 });
 
-            modelBuilder.Entity("Auto_Circuit.Entities.User", b =>
+            modelBuilder.Entity("Auto_Circuit.Entities.identity.Role", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("Auto_Circuit.Entities.identity.User", b =>
                 {
                     b.Navigation("UserProducts");
+
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Auto_Circuit.Migrations
+namespace Auto_Circuit.Data.Migrations
 {
     [DbContext(typeof(CircuitContext))]
     partial class CircuitContextModelSnapshot : ModelSnapshot
@@ -139,20 +139,20 @@ namespace Auto_Circuit.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("AspNetRoles", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "Account",
-                            Name = "1",
-                            NormalizedName = "1"
+                            Id = "1",
+                            Name = "Account",
+                            NormalizedName = "ACCOUNT"
                         },
                         new
                         {
-                            Id = "Admin",
-                            Name = "2",
-                            NormalizedName = "2"
+                            Id = "2",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
                         });
                 });
 
@@ -309,11 +309,18 @@ namespace Auto_Circuit.Migrations
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(34)
+                        .HasColumnType("nvarchar(34)");
+
                     b.HasKey("UserId", "RoleId");
 
-                    b.HasIndex("RoleId");
-
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasDiscriminator().HasValue("IdentityUserRole<string>");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -335,18 +342,27 @@ namespace Auto_Circuit.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Auto_Circuit.Entities.identity.UserRole", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<string>");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasDiscriminator().HasValue("UserRole");
+                });
+
             modelBuilder.Entity("Auto_Circuit.Entities.UserProducts", b =>
                 {
                     b.HasOne("Auto_Circuit.Entities.Product", "Product")
                         .WithMany("UserProducts")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Auto_Circuit.Entities.identity.User", "User")
                         .WithMany("UserProducts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -381,21 +397,6 @@ namespace Auto_Circuit.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Auto_Circuit.Entities.identity.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Auto_Circuit.Entities.identity.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.HasOne("Auto_Circuit.Entities.identity.User", null)
@@ -405,14 +406,40 @@ namespace Auto_Circuit.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Auto_Circuit.Entities.identity.UserRole", b =>
+                {
+                    b.HasOne("Auto_Circuit.Entities.identity.Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Auto_Circuit.Entities.identity.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Auto_Circuit.Entities.Product", b =>
                 {
                     b.Navigation("UserProducts");
                 });
 
+            modelBuilder.Entity("Auto_Circuit.Entities.identity.Role", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
             modelBuilder.Entity("Auto_Circuit.Entities.identity.User", b =>
                 {
                     b.Navigation("UserProducts");
+
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

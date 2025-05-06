@@ -13,6 +13,7 @@ public class CircuitContext : IdentityDbContext<User, Role, string>
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<Review> Reviews { get; set; }
     public DbSet<UserProducts> UserProducts { get; set; }
+    public DbSet<UserRole> UserRoles { get; set; }
 
     public CircuitContext(DbContextOptions<CircuitContext> options) : base(options)
     {
@@ -28,20 +29,30 @@ public class CircuitContext : IdentityDbContext<User, Role, string>
         builder.Entity<UserProducts>()
             .HasOne(up => up.User)
             .WithMany(u => u.UserProducts)
-            .HasForeignKey(up => up.UserId);
+            .HasForeignKey(up => up.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<UserProducts>()
             .HasOne(d => d.Product)
             .WithMany(p => p.UserProducts)
-            .HasForeignKey(d => d.ProductId);
+            .HasForeignKey(d => d.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<User>()
+            .HasMany(u => u.UserRoles)
+            .WithOne(up => up.User)
+            .HasForeignKey(up => up.UserId);
+
 
         builder.Entity<Role>()
-           .ToTable("Roles");
+            .HasMany(r => r.UserRoles)
+            .WithOne(up => up.Role)
+            .HasForeignKey(up => up.RoleId);
 
         builder.Entity<Role>()
             .HasData(
-                new("1", UserType.Account),
-                new("2", UserType.Admin)
-             );
+                new Role(UserType.Account, "1"),
+                new Role(UserType.Admin, "2")
+            );
     }
 }

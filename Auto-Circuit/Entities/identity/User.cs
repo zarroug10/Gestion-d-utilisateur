@@ -11,6 +11,7 @@ public class User : IdentityUser<string>
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public ICollection<UserProducts> UserProducts { get; set; } = [];
+    public ICollection<UserRole> UserRoles { get; set; } = [];
 
     public User()
     {

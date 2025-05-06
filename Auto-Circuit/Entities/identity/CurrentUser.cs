@@ -136,7 +136,7 @@ public class CurrentUser
         {
             if (isAdmin == null)
             {
-                isAdmin = claimsPrincipal.IsInRole(UserType.Account);
+                isAdmin = claimsPrincipal.IsInRole(UserType.Admin);
             }
             return isAdmin;
         }
