@@ -53,6 +53,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Auto_Circuit.Controllers.ContractsController",
+    "Method": "GetAll",
+    "RelativePath": "api/Contracts",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Auto_Circuit.Controllers.ContractsController",
+    "Method": "GetContractsByUser",
+    "RelativePath": "api/Contracts/user",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Auto_Circuit.Controllers.UserController",
     "Method": "GetAll",
     "RelativePath": "api/User",
@@ -101,6 +127,48 @@
         "Type": "Auto_Circuit.DTO.UpdateDTo",
         "IsRequired": true
       },
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Auto_Circuit.Controllers.VacationController",
+    "Method": "GetAllAsync",
+    "RelativePath": "api/Vacation",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Auto_Circuit.Controllers.VacationController",
+    "Method": "CreateVacation",
+    "RelativePath": "api/Vacation/create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "vacation",
+        "Type": "Auto_Circuit.DTO.VacationFormDTo",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Auto_Circuit.Controllers.VacationController",
+    "Method": "GetVacationByUserAsync",
+    "RelativePath": "api/Vacation/user",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
         "Name": "id",
         "Type": "System.String",

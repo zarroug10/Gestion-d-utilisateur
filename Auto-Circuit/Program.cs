@@ -34,6 +34,8 @@ builder.Services.AddDbContext<CircuitContext>(options =>
 
 builder.Services.AddScoped<BaseRepository>();
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<ContractRepository>();
+builder.Services.AddScoped<VacationRepository>();
 builder.Services.AddScoped(typeof(IRepository), typeof(BaseRepository));
 builder.Services.AddTransient<EmailSenderService>();
 builder.Services.AddScoped<ICurrentUser, CurrentUserService>();

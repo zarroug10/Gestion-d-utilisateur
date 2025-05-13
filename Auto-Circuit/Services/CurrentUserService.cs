@@ -12,5 +12,4 @@ public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICur
          ? new() : new(httpContextAccessor.HttpContext!.User);
 
     public string UserId => User.Id;
-
 }

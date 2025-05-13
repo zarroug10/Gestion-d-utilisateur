@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Resources;
-using System.Text.Encodings.Web;
 using System.Text.Encodings.Web;
 
 using Auto_Circuit.DTO;
 using Auto_Circuit.DTOs;
 using Auto_Circuit.Entities.identity;
+using Auto_Circuit.Interfaces;
 using Auto_Circuit.Services;
 
 using AutoMapper;
@@ -13,7 +12,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Auto_Circuit.Controllers;
 
@@ -25,16 +23,19 @@ public class AuthenticationController : ControllerBase
     private readonly EmailSenderService _emailSenderService;
     private readonly SignInManager<User> _signInManager;
     private readonly IMapper _mapper;
+    private readonly ICurrentUser _currentUser;
     public AuthenticationController(
         UserManager<User> userManager,
         SignInManager<User> signInManager,
         EmailSenderService emailSenderService,
+        ICurrentUser currentUser,
         IMapper mapper)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _emailSenderService = emailSenderService;
         _mapper = mapper;
+        _currentUser = currentUser;
     }
 
     [HttpPost("Register")]
@@ -47,6 +48,7 @@ public class AuthenticationController : ControllerBase
 
         var user = _mapper.Map<User>(signUpDto);
         user.Id = Guid.NewGuid().ToString();
+        user.ContractId.OwnerId = _currentUser.UserId;
 
         var result = await _userManager.CreateAsync(user, signUpDto.Password);
 
@@ -54,7 +56,14 @@ public class AuthenticationController : ControllerBase
         {
             // Optional: assign role if needed and it exists
             //fix the userRole 
-            await _userManager.AddToRoleAsync(user, UserType.Account);
+            if (signUpDto.Role == null)
+            {
+                await _userManager.AddToRoleAsync(user, UserType.Directeur);
+            }
+            else
+            {
+                await _userManager.AddToRoleAsync(user, signUpDto.Role);
+            }
 
             try
             {
@@ -71,8 +80,6 @@ public class AuthenticationController : ControllerBase
                 id = user.Id,
                 userName = user.UserName,
                 email = user.Email,
-                firstName = user.FirstName,
-                lastName = user.LastName
             });
         }
 
@@ -101,9 +108,9 @@ public class AuthenticationController : ControllerBase
 
         var messageBody = $@"
         <div style=""font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#333;"">
-            <p>Hi {user.FirstName} {user.LastName},</p>
-            <p>Thank you for creating an account at <strong>Dot Net Tutorials</strong>.
-            To start enjoying all of our features, please confirm your email address by clicking the button below:</p>
+            <p>Hi {user.UserName}</p>
+            <p>You has been accepted to Work with Us.
+             please confirm your email address by clicking the button below:</p>
             <p>
                 <a href=""{safeLink}"" 
                    style=""background-color:#007bff;color:#fff;padding:10px 20px;text-decoration:none;
@@ -117,7 +124,7 @@ public class AuthenticationController : ControllerBase
             </p>
             <p>If you did not sign up for this account, please ignore this email.</p>
             <p>Thanks,<br />
-            The Dot Net Tutorials Team</p>
+            The Recruitment Team</p>
         </div>
     ";
         await _emailSenderService.SendEmailAync(email, subject, messageBody, true);

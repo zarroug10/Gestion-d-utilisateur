@@ -4,6 +4,7 @@ using Auto_Circuit.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auto_Circuit.Data.Migrations
 {
     [DbContext(typeof(CircuitContext))]
-    partial class CircuitContextModelSnapshot : ModelSnapshot
+    [Migration("20250509143221_UpdatedDb")]
+    partial class UpdatedDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,26 +36,22 @@ namespace Auto_Circuit.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("Salary")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("contractType")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("contractType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Contracts");
                 });
@@ -78,11 +77,9 @@ namespace Auto_Circuit.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Vacations");
                 });
@@ -162,9 +159,8 @@ namespace Auto_Circuit.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -192,9 +188,8 @@ namespace Auto_Circuit.Data.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -341,24 +336,6 @@ namespace Auto_Circuit.Data.Migrations
                     b.HasDiscriminator().HasValue("UserRole");
                 });
 
-            modelBuilder.Entity("Auto_Circuit.Entities.Contract", b =>
-                {
-                    b.HasOne("Auto_Circuit.Entities.identity.User", "User")
-                        .WithOne("ContractId")
-                        .HasForeignKey("Auto_Circuit.Entities.Contract", "UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Auto_Circuit.Entities.Vacation", b =>
-                {
-                    b.HasOne("Auto_Circuit.Entities.identity.User", "User")
-                        .WithMany("Vacations")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Auto_Circuit.Entities.identity.Role", null)
@@ -421,12 +398,7 @@ namespace Auto_Circuit.Data.Migrations
 
             modelBuilder.Entity("Auto_Circuit.Entities.identity.User", b =>
                 {
-                    b.Navigation("ContractId")
-                        .IsRequired();
-
                     b.Navigation("UserRoles");
-
-                    b.Navigation("Vacations");
                 });
 #pragma warning restore 612, 618
         }

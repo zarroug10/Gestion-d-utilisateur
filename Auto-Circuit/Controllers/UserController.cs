@@ -1,5 +1,6 @@
 ﻿using System.Text.Encodings.Web;
 
+using Auto_Circuit.Data;
 using Auto_Circuit.Data.Repository;
 using Auto_Circuit.DTO;
 using Auto_Circuit.Entities.identity;
@@ -10,6 +11,7 @@ using AutoMapper;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -23,18 +25,21 @@ public class UserController : ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
+    private readonly CircuitContext _dbContext;
 
     public UserController(
         UserRepository userRepository,
         UserManager<User> userManager,
         EmailSenderService emailSenderService,
         IMapper mapper,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser,
+        CircuitContext circuitContext)
     {
         _userRepository = userRepository;
         _userManager = userManager;
         _mapper = mapper;
         _currentUser = currentUser;
+        _dbContext = circuitContext;
     }
 
     [HttpGet]
@@ -82,6 +87,9 @@ public class UserController : ControllerBase
             {
                 return NotFound();
             }
+            var contracts = _dbContext.Contracts.Where(c => c.UserId == id);
+            _dbContext.Contracts.RemoveRange(contracts);
+            await _dbContext.SaveChangesAsync();
             await _userManager.DeleteAsync(user);
             return NoContent();
         }

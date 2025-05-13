@@ -9,12 +9,8 @@ namespace Auto_Circuit.Data;
 
 public class CircuitContext : IdentityDbContext<User, Role, string>
 {
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Rating> Ratings { get; set; }
-    public DbSet<Review> Reviews { get; set; }
-    public DbSet<UserProducts> UserProducts { get; set; }
-    public DbSet<UserRole> UserRoles { get; set; }
-
+    public DbSet<Contract> Contracts { get; set; }
+    public DbSet<Vacation> Vacations { get; set; }
     public CircuitContext(DbContextOptions<CircuitContext> options) : base(options)
     {
     }
@@ -23,26 +19,10 @@ public class CircuitContext : IdentityDbContext<User, Role, string>
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<UserProducts>()
-            .HasKey(up => new { up.UserId, up.ProductId });
-
-        builder.Entity<UserProducts>()
-            .HasOne(up => up.User)
-            .WithMany(u => u.UserProducts)
-            .HasForeignKey(up => up.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder.Entity<UserProducts>()
-            .HasOne(d => d.Product)
-            .WithMany(p => p.UserProducts)
-            .HasForeignKey(d => d.ProductId)
-            .OnDelete(DeleteBehavior.Restrict);
-
         builder.Entity<User>()
             .HasMany(u => u.UserRoles)
             .WithOne(up => up.User)
             .HasForeignKey(up => up.UserId);
-
 
         builder.Entity<Role>()
             .HasMany(r => r.UserRoles)
@@ -51,8 +31,10 @@ public class CircuitContext : IdentityDbContext<User, Role, string>
 
         builder.Entity<Role>()
             .HasData(
-                new Role(UserType.Account, "1"),
-                new Role(UserType.Admin, "2")
+                new Role(UserType.RH, "1"),
+                new Role(UserType.Responsable, "2"),
+                new Role(UserType.Employe, "3"),
+                new Role(UserType.Directeur, "4")
             );
     }
 }

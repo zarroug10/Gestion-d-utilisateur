@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using Auto_Circuit.DTO;
+using Auto_Circuit.Entities.identity;
+
 namespace Auto_Circuit.DTOs
 {
     public class UserSignUpDto
@@ -17,10 +20,27 @@ namespace Auto_Circuit.DTOs
         [StringLength(100, MinimumLength = 6)]
         public string Password { get; set; }
 
+        [Required]
         [StringLength(50)]
-        public string FirstName { get; set; }
+        public string Gender { get; set; }
 
+        [Required]
+        [StringLength(8)]
+        public string CIN { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Status { get; set; }
+
+        [Required]
+        [StringLength(2)]
+        public string kidsNumber { get; set; }
+
+        [Required]
         [StringLength(50)]
-        public string LastName { get; set; }
+        public string Role { get; set; } = UserType.Employe.ToString();
+
+        public ContractDto? Contract { get; set; }
+
     }
 }

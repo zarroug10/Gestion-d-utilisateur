@@ -2,6 +2,8 @@
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 
+using Auto_Circuit.Entities.Enum;
+
 namespace Auto_Circuit.Entities.identity;
 
 public class CurrentUser
@@ -10,13 +12,17 @@ public class CurrentUser
 
     private string id;
     private string email;
-    private string? firstName;
-    private string? lastName;
+    private string? cin;
+    private string? gender;
+    private string? status;
     private string? userName;
 
     private bool? isAuthenticated;
     private bool? isAdmin;
-    private bool? isAccount;
+    private bool? isRH;
+    private bool? isEmployee;
+    private bool? isResponsible;
+    private bool? isDirecteur;
 
     private IList<string>? roles;
 
@@ -70,35 +76,50 @@ public class CurrentUser
         }
     }
 
-    public string? FirstName
+    public string CIN
     {
         get
         {
-            if (firstName == null)
+            if (cin == null)
             {
-                firstName = claimsPrincipal.FindFirst("FirstName")?.Value;
+                cin = claimsPrincipal.FindFirst("Cin")?.Value;
             }
-            return firstName;
+            return cin;
         }
         set
         {
-            firstName = value;
+            cin = value;
+        }
+    }
+    public string Status
+    {
+        get
+        {
+            if (status == null)
+            {
+                status = claimsPrincipal.FindFirst("Status")?.Value;
+            }
+            return status;
+        }
+        set
+        {
+            status = value;
         }
     }
 
-    public string LastName
+    public string Gender
     {
         get
         {
-            if (lastName == null)
+            if (gender == null)
             {
-                lastName = claimsPrincipal.FindFirstValue("LastName");
+                gender = claimsPrincipal.FindFirstValue("Gender");
             }
-            return lastName;
+            return gender;
         }
         set
         {
-            lastName = value;
+            gender = value;
         }
     }
     public string? Username
@@ -142,19 +163,49 @@ public class CurrentUser
         }
     }
 
-    public bool? IsAccount
+    public bool? IsRH
     {
         get
         {
-            if (isAccount == null)
+            if (isRH == null)
             {
-                isAccount = claimsPrincipal.IsInRole(UserType.Account);
+                isRH = claimsPrincipal.IsInRole(UserType.RH);
             }
-            return isAccount;
+            return isRH;
         }
-        set
+    }
+
+    public bool? IsResponsable
+    {
+        get
         {
-            isAccount = value;
+            if (isResponsible == null)
+            {
+                isResponsible = claimsPrincipal.IsInRole(UserType.Responsable);
+            }
+            return isResponsible;
+        }
+    }
+    public bool? IsDirecteur
+    {
+        get
+        {
+            if (isDirecteur == null)
+            {
+                isDirecteur = claimsPrincipal.IsInRole(UserType.Directeur);
+            }
+            return isDirecteur;
+        }
+    }
+    public bool? IsEmployee
+    {
+        get
+        {
+            if (isEmployee == null)
+            {
+                isEmployee = claimsPrincipal.IsInRole(UserType.Employe);
+            }
+            return isEmployee;
         }
     }
 

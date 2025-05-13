@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
+
+using Auto_Circuit.Entities.Enum;
 
 using Microsoft.AspNetCore.Identity;
 
@@ -7,11 +10,13 @@ namespace Auto_Circuit.Entities.identity;
 
 public class User : IdentityUser<string>
 {
-
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public ICollection<UserProducts> UserProducts { get; set; } = [];
-    public ICollection<UserRole> UserRoles { get; set; } = [];
+    public int Cin { get; set; }
+    public string Gender { get; set; }
+    public string Status { get; set; }
+    public int? kidsNumber { get; set; }
+    public Contract ContractId { get; set; }
+    public IList<Vacation> Vacations { get; set; }
+    public IList<UserRole> UserRoles { get; set; } = [];
 
     public User()
     {
