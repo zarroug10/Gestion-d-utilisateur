@@ -10,9 +10,29 @@ using Auto_Circuit.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+
+    // Optional: More permissive policy for development
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 // Add services to the container.
 builder.Services.AddIdentity<User, Role>(
@@ -36,14 +56,14 @@ builder.Services.AddScoped<BaseRepository>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<ContractRepository>();
 builder.Services.AddScoped<VacationRepository>();
+builder.Services.AddScoped<MonthlySpentRepository>();
+builder.Services.AddScoped<WorkTimeRepository>();
 builder.Services.AddScoped(typeof(IRepository), typeof(BaseRepository));
 builder.Services.AddTransient<EmailSenderService>();
 builder.Services.AddScoped<ICurrentUser, CurrentUserService>();
 
-
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -51,16 +71,19 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-// Configure the HTTP request pipeline.  
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Use CORS - IMPORTANT: Must be before UseRouting()
+app.UseCors("AllowAngularApp");
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

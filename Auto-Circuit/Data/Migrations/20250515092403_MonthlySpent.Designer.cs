@@ -4,6 +4,7 @@ using Auto_Circuit.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auto_Circuit.Data.Migrations
 {
     [DbContext(typeof(CircuitContext))]
-    partial class CircuitContextModelSnapshot : ModelSnapshot
+    [Migration("20250515092403_MonthlySpent")]
+    partial class MonthlySpent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,16 +86,16 @@ namespace Auto_Circuit.Data.Migrations
 
             modelBuilder.Entity("Auto_Circuit.Entities.Vacation", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPending")
                         .HasColumnType("bit");
 
                     b.Property<string>("Reason")
@@ -109,38 +112,6 @@ namespace Auto_Circuit.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Vacations");
-                });
-
-            modelBuilder.Entity("Auto_Circuit.Entities.WorkTime", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPending")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
-
-                    b.ToTable("WorkTimes");
                 });
 
             modelBuilder.Entity("Auto_Circuit.Entities.identity.Role", b =>
@@ -424,15 +395,6 @@ namespace Auto_Circuit.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Auto_Circuit.Entities.WorkTime", b =>
-                {
-                    b.HasOne("Auto_Circuit.Entities.identity.User", "User")
-                        .WithOne("WorkTime")
-                        .HasForeignKey("Auto_Circuit.Entities.WorkTime", "UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Auto_Circuit.Entities.identity.Role", null)
@@ -501,9 +463,6 @@ namespace Auto_Circuit.Data.Migrations
                     b.Navigation("UserRoles");
 
                     b.Navigation("Vacations");
-
-                    b.Navigation("WorkTime")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

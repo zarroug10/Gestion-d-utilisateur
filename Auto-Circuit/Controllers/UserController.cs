@@ -45,16 +45,30 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var users = await _userRepository.GetAllUsersAsync();
+        try
+        {
+            var users = await _userRepository.GetAllUsersAsync();
 
-        return Ok(users);
+            return Ok(users);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetUserById(string id)
+    {
+        var user = await _userRepository.GetUserByIdAsync(id ?? _currentUser.UserId);
+        return Ok(user);
     }
 
     [HttpGet("CurrentUser")]
     public IActionResult GetCurrentUser() => Ok(_currentUser.User);
 
-    [HttpPatch("Update")]
-    public async Task<IActionResult> UpdateUser(UpdateDTo updateDTo, [FromQuery] string id)
+    [HttpPatch("Update/{id?}")]
+    public async Task<IActionResult> UpdateUser(UpdateDTo updateDTo, string? id)
     {
         try
         {
@@ -62,7 +76,7 @@ public class UserController : ControllerBase
             {
                 return BadRequest(ModelState);
             }
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id ?? _currentUser.UserId);
             if (user == null)
             {
                 return NotFound();
@@ -77,8 +91,8 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpDelete("Delete")]
-    public async Task<IActionResult> DeleteUser([FromQuery] string id)
+    [HttpDelete("Delete/{id?}")]
+    public async Task<IActionResult> DeleteUser(string? id)
     {
         try
         {
@@ -88,7 +102,9 @@ public class UserController : ControllerBase
                 return NotFound();
             }
             var contracts = _dbContext.Contracts.Where(c => c.UserId == id);
+            var vacation = _dbContext.Vacations.Where(c => c.UserId == id);
             _dbContext.Contracts.RemoveRange(contracts);
+            _dbContext.Vacations.RemoveRange(vacation);
             await _dbContext.SaveChangesAsync();
             await _userManager.DeleteAsync(user);
             return NoContent();

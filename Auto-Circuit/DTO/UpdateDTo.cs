@@ -11,10 +11,10 @@ public class UpdateDTo
     [StringLength(100)]
     public string? Email { get; set; }
 
-    [StringLength(50)]
-    public string? FirstName { get; set; }
+    [StringLength(7)]
+    public string? Cin { get; set; }
 
     [StringLength(50)]
-    public string? LastName { get; set; }
+    public string? Status { get; set; }
 
 }

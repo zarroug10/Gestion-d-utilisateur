@@ -34,7 +34,7 @@ namespace Auto_Circuit.DTOs
 
         [Required]
         [StringLength(2)]
-        public string kidsNumber { get; set; }
+        public int? kidsNumber { get; set; }
 
         [Required]
         [StringLength(50)]

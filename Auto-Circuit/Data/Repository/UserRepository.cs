@@ -11,11 +11,16 @@ namespace Auto_Circuit.Data.Repository;
 
 public class UserRepository(BaseRepository context, IMapper mapper, CircuitContext circuitContext)
 {
-    public async Task<User> GetUserByIdAsync(string id)
+    public async Task<UserDTo> GetUserByIdAsync(string id)
     {
         try
         {
-            var user = await context.GetByIdAsync<User>(id);
+            var user = await circuitContext.Users
+                                           .Include(u => u.ContractId)
+                                           .Include(u => u.Vacations)
+                                           .AsSplitQuery()
+                                           .ProjectTo<UserDTo>(mapper.ConfigurationProvider)
+                                           .FirstOrDefaultAsync(x => x.id == id);
             if (user is not null)
             {
                 return user;
@@ -25,9 +30,9 @@ public class UserRepository(BaseRepository context, IMapper mapper, CircuitConte
                 throw new Exception("User is Not Found !");
             }
         }
-        catch
+        catch (Exception ex)
         {
-            throw new Exception("Server Error");
+            throw new Exception(ex.Message);
         }
     }
     public async Task<IEnumerable<UserDTo>> GetAllUsersAsync()
@@ -36,6 +41,8 @@ public class UserRepository(BaseRepository context, IMapper mapper, CircuitConte
         var users = await context.GetData<User>()
             .AsNoTracking()
             .Include(u => u.ContractId)
+            .Include(u => u.Vacations)
+            .AsSplitQuery()
             .ProjectTo<UserDTo>(mapper.ConfigurationProvider)
             .ToListAsync();
 

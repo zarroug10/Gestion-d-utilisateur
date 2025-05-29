@@ -21,10 +21,10 @@ public class VacationController(
         return Ok(vacations);
     }
 
-    [HttpGet("{user}")]
-    public async Task<IActionResult> GetVacationByUserAsync(string user)
+    [HttpGet("User")]
+    public async Task<IActionResult> GetVacationByUserAsync(string? userId, CancellationToken cancellationToken = default)
     {
-        var vacations = await vacationRepository.GetVacationsbyUserIdAsync(id ?? currentUser.UserId);
+        var vacations = await vacationRepository.GetVacationsbyUserIdAsync(userId ?? currentUser.UserId);
         return Ok(vacations);
     }
 
@@ -33,5 +33,11 @@ public class VacationController(
     {
         var createdVacation = await vacationRepository.CreateVacationAsync(vacation);
         return Ok(createdVacation);
+    }
+
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> DeleteVacation(string id)
+    {
+        return Ok(vacationRepository.DeleteVacationAsync(id));
     }
 }

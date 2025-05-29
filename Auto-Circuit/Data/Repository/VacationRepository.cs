@@ -50,11 +50,6 @@ public class VacationRepository(BaseRepository context, IMapper mapper, ICurrent
 
     public async Task DeleteVacationAsync(string id)
     {
-        var vacation = await context.GetByIdAsync<Vacation>(id);
-        if (vacation == null)
-        {
-            throw new Exception("Vacation not found");
-        }
         await context.DeleteAsync<Vacation>(id);
     }
 

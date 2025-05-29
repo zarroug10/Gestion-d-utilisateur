@@ -168,7 +168,7 @@ public class AuthenticationController : ControllerBase
         if (user == null)
         {
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-            return BadRequest(ModelState);
+            return BadRequest(new { message = "Incorrect password." });
         }
 
         var validPassword = await _userManager.CheckPasswordAsync(user, loginDTo.Password);
@@ -176,14 +176,14 @@ public class AuthenticationController : ControllerBase
         if (!validPassword)
         {
             ModelState.AddModelError(string.Empty, "Incorrect password.");
-            return BadRequest(ModelState);
+            return BadRequest(new { message = "Incorrect password." });
         }
 
         if (!user.EmailConfirmed)
         {
             ModelState.AddModelError(string.Empty, "Your email address is not confirmed. " +
                 "Please confirm your email before logging in.");
-            return BadRequest(ModelState);
+            return BadRequest(new { message = "Incorrect password." });
         }
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginDTo.Password, lockoutOnFailure: false);
@@ -205,7 +205,12 @@ public class AuthenticationController : ControllerBase
         }
 
         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-        return BadRequest(ModelState);
+        return BadRequest(new { message = "Incorrect password." });
     }
+
+    [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task Logout() => await _signInManager.SignOutAsync();
 
 }

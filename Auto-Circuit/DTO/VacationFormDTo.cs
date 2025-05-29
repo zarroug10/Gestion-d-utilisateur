@@ -6,4 +6,5 @@ public class VacationFormDTo
     public DateTime EndDate { get; set; }
     public string? Reason { get; set; }
     public bool IsApproved { get; set; }
+    public bool IsPending { get; set; }
 }

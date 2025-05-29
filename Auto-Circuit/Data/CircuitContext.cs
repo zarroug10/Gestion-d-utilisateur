@@ -11,6 +11,8 @@ public class CircuitContext : IdentityDbContext<User, Role, string>
 {
     public DbSet<Contract> Contracts { get; set; }
     public DbSet<Vacation> Vacations { get; set; }
+    public DbSet<MonthlySpent> MonthlySpents { get; set; }
+    public DbSet<WorkTime> WorkTimes { get; set; }
     public CircuitContext(DbContextOptions<CircuitContext> options) : base(options)
     {
     }
