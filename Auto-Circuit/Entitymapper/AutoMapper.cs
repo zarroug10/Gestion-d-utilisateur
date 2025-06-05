@@ -21,12 +21,14 @@ public class AutoMapper : Profile
         CreateMap<LoginDTo, User>();
         CreateMap<UserSignUpDto, User>()
             .ForMember(dest => dest.ContractId, opt => opt.MapFrom(src => src.Contract));
-        CreateMap<UpdateDTo, User>();
+        CreateMap<UpdateDTo, User>()
+            .ForMember(dest => dest.ContractId, opt => opt.MapFrom(src => src.ContractDto));
 
         CreateMap<ContractDto, Contract>();
         CreateMap<Contract, ContractDto>();
 
-        CreateMap<Vacation, VacationDTO>();
+        CreateMap<Vacation, VacationDTO>()
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.UserName));
         CreateMap<VacationFormDTo, Vacation>();
 
         CreateMap<MonthlySpent, MonthlySpentDTo>()
@@ -36,7 +38,8 @@ public class AutoMapper : Profile
         CreateMap<WorkTime, WorkTimeDTo>()
             .ForMember(dest => dest.username, opt => opt.MapFrom(src => src.User.UserName));
 
-        CreateMap<WorkTimeDTo, WorkTime>();
-        CreateMap<WorkTime, WorkTimeDTo>();
+        CreateMap<WorkTimeRequest, WorkTime>();
+        CreateMap<WorkTime, WorkTimeDTo>()
+            .ForMember(dest => dest.username, opt => opt.MapFrom(src => src.User.UserName));
     }
 }

@@ -1,4 +1,6 @@
-﻿using Auto_Circuit.DTO;
+﻿using System.Globalization;
+
+using Auto_Circuit.DTO;
 using Auto_Circuit.Entities;
 using Auto_Circuit.Generics;
 using Auto_Circuit.Interfaces;
@@ -18,8 +20,14 @@ public class MonthlySpentRepository(
 
     public async Task<IEnumerable<MonthlySpentDTo>> GetSpent()
     {
-        var spentList = await baseRepository.GetData<MonthlySpent>().OrderBy(o => o).ProjectTo<MonthlySpentDTo>(mapper.ConfigurationProvider).ToListAsync();
-        return spentList;
+        var rawList = await baseRepository.GetData<MonthlySpent>().ToListAsync();
+
+        var sorted = rawList
+            .OrderBy(o => o.Year)
+            .ThenBy(o => GetMonthNumber(o.Month))
+            .ToList();
+
+        return mapper.Map<List<MonthlySpentDTo>>(sorted);
     }
 
     public async Task<MonthlySpentDTo> GetSpentById(string id)
@@ -70,5 +78,9 @@ public class MonthlySpentRepository(
     public async Task DeleteSpent(string id)
     {
         await baseRepository.DeleteAsync<MonthlySpent>(id);
+    }
+    private int GetMonthNumber(string monthName)
+    {
+        return DateTime.ParseExact(monthName, "MMMM", CultureInfo.InvariantCulture).Month;
     }
 }

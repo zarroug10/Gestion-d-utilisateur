@@ -42,12 +42,12 @@ public class UserController : ControllerBase
         _dbContext = circuitContext;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("All")]
+    public async Task<IActionResult> GetAll(string? search)
     {
         try
         {
-            var users = await _userRepository.GetAllUsersAsync();
+            var users = await _userRepository.GetAllUsersAsync(search);
 
             return Ok(users);
         }
@@ -81,8 +81,13 @@ public class UserController : ControllerBase
             {
                 return NotFound();
             }
+            var contracts = await _dbContext.Contracts.Where(c => c.UserId == id).FirstOrDefaultAsync();
+
             _mapper.Map(updateDTo, user);
+            _mapper.Map(updateDTo.ContractDto, contracts);
+
             await _userManager.UpdateAsync(user);
+            await _dbContext.SaveChangesAsync();
             return NoContent();
         }
         catch (Exception ex)

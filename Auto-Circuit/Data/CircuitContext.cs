@@ -31,12 +31,19 @@ public class CircuitContext : IdentityDbContext<User, Role, string>
             .WithOne(up => up.Role)
             .HasForeignKey(up => up.RoleId);
 
+        builder.Entity<User>()
+            .HasMany(u => u.WorkTime)
+            .WithOne(wt => wt.User)
+            .HasForeignKey(wt => wt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.Entity<Role>()
             .HasData(
                 new Role(UserType.RH, "1"),
                 new Role(UserType.Responsable, "2"),
                 new Role(UserType.Employe, "3"),
-                new Role(UserType.Directeur, "4")
+                new Role(UserType.Directeur, "4"),
+                new Role(UserType.Admin, "5")
             );
     }
 }

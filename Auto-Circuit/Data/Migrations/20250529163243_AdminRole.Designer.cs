@@ -4,6 +4,7 @@ using Auto_Circuit.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auto_Circuit.Data.Migrations
 {
     [DbContext(typeof(CircuitContext))]
-    partial class CircuitContextModelSnapshot : ModelSnapshot
+    [Migration("20250529163243_AdminRole")]
+    partial class AdminRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,7 +139,9 @@ namespace Auto_Circuit.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("WorkTimes");
                 });
@@ -431,9 +436,8 @@ namespace Auto_Circuit.Data.Migrations
             modelBuilder.Entity("Auto_Circuit.Entities.WorkTime", b =>
                 {
                     b.HasOne("Auto_Circuit.Entities.identity.User", "User")
-                        .WithMany("WorkTime")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithOne("WorkTime")
+                        .HasForeignKey("Auto_Circuit.Entities.WorkTime", "UserId");
 
                     b.Navigation("User");
                 });
@@ -507,7 +511,8 @@ namespace Auto_Circuit.Data.Migrations
 
                     b.Navigation("Vacations");
 
-                    b.Navigation("WorkTime");
+                    b.Navigation("WorkTime")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

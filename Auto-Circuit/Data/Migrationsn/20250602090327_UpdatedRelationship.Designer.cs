@@ -4,16 +4,19 @@ using Auto_Circuit.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Auto_Circuit.Data.Migrations
+namespace Auto_Circuit.Data.Migrationsn
 {
     [DbContext(typeof(CircuitContext))]
-    partial class CircuitContextModelSnapshot : ModelSnapshot
+    [Migration("20250602090327_UpdatedRelationship")]
+    partial class UpdatedRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

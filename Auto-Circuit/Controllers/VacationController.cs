@@ -40,4 +40,32 @@ public class VacationController(
     {
         return Ok(vacationRepository.DeleteVacationAsync(id));
     }
+
+    [HttpPut("update/approve/{id}")]
+    public async Task<IActionResult> approveWorkTime(string? id)
+    {
+        try
+        {
+            await vacationRepository.ApproveVacation(id);
+            return Ok(new { message = "WorkTime updated successfully." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPut("update/reject/{id}")]
+    public async Task<IActionResult> rejecteWorkTime(string? id)
+    {
+        try
+        {
+            await vacationRepository.RejectVacation(id);
+            return Ok(new { message = "WorkTime updated successfully." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

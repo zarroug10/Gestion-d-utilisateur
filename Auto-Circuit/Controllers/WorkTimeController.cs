@@ -59,8 +59,22 @@ public class WorkTimeController(WorkTimeRepository workTimeRepository, ICurrentU
         }
     }
 
+    [HttpGet("User/{UserId?}")]
+    public async Task<IActionResult> GetWorkTimeByUser(string? UserId)
+    {
+        try
+        {
+            var workTimes = await workTimeRepository.GetWorkTimeByUser(UserId);
+            return Ok(workTimes);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpPost]
-    public async Task<IActionResult> CreateWorkTime(WorkTimeDTo workTimeDTo)
+    public async Task<IActionResult> CreateWorkTime(WorkTimeRequest workTimeDTo)
     {
         try
         {
@@ -68,7 +82,7 @@ public class WorkTimeController(WorkTimeRepository workTimeRepository, ICurrentU
             {
                 workTimeDTo.UserId = currentUser.UserId;
                 await workTimeRepository.AddWorkTime(workTime: workTimeDTo);
-                return Ok("WorkTime Created successfully.");
+                return Ok(new { message = "WorkTime Created successfully." });
             }
             else
             {
@@ -95,13 +109,41 @@ public class WorkTimeController(WorkTimeRepository workTimeRepository, ICurrentU
         }
     }
 
-    [HttpDelete("Delete")]
+    [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> DeleteWorkTime(string id)
     {
         try
         {
             await workTimeRepository.DeleteWorkTime(id);
-            return Ok("WorkTime deleted successfully.");
+            return Ok(new { message = "WorkTime deleted successfully." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPut("update/approve/{id}")]
+    public async Task<IActionResult> approveWorkTime(string? id)
+    {
+        try
+        {
+            await workTimeRepository.ApproveWorkTime(id);
+            return Ok("WorkTime updated successfully.");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPut("update/reject/{id}")]
+    public async Task<IActionResult> rejecteWorkTime(string? id)
+    {
+        try
+        {
+            await workTimeRepository.rejectWorkTime(id);
+            return Ok("WorkTime updated successfully.");
         }
         catch (Exception ex)
         {

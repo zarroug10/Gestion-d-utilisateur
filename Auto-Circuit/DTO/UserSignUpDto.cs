@@ -33,7 +33,6 @@ namespace Auto_Circuit.DTOs
         public string Status { get; set; }
 
         [Required]
-        [StringLength(2)]
         public int? kidsNumber { get; set; }
 
         [Required]

@@ -15,7 +15,7 @@ public class User : IdentityUser<string>
     public string Status { get; set; }
     public int? kidsNumber { get; set; }
     public Contract ContractId { get; set; }
-    public WorkTime WorkTime { get; set; }
+    public IList<WorkTime> WorkTime { get; set; }
     public IList<Vacation> Vacations { get; set; }
     public IList<UserRole> UserRoles { get; set; } = [];
 

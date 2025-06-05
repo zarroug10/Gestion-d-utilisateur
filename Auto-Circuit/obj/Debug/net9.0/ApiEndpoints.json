@@ -184,16 +184,6 @@
   },
   {
     "ContainingType": "Auto_Circuit.Controllers.UserController",
-    "Method": "GetAll",
-    "RelativePath": "api/User",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Auto_Circuit.Controllers.UserController",
     "Method": "GetUserById",
     "RelativePath": "api/User/{id}",
     "HttpMethod": "GET",
@@ -204,6 +194,22 @@
         "Name": "id",
         "Type": "System.String",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Auto_Circuit.Controllers.UserController",
+    "Method": "GetAll",
+    "RelativePath": "api/User/All",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -299,6 +305,38 @@
   },
   {
     "ContainingType": "Auto_Circuit.Controllers.VacationController",
+    "Method": "approveWorkTime",
+    "RelativePath": "api/Vacation/update/approve/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Auto_Circuit.Controllers.VacationController",
+    "Method": "rejecteWorkTime",
+    "RelativePath": "api/Vacation/update/reject/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Auto_Circuit.Controllers.VacationController",
     "Method": "GetVacationByUserAsync",
     "RelativePath": "api/Vacation/User",
     "HttpMethod": "GET",
@@ -323,7 +361,7 @@
     "Parameters": [
       {
         "Name": "workTimeDTo",
-        "Type": "Auto_Circuit.DTO.WorkTimeDTo",
+        "Type": "Auto_Circuit.DTO.WorkTimeRequest",
         "IsRequired": true
       }
     ],
@@ -358,7 +396,7 @@
   {
     "ContainingType": "Auto_Circuit.Controllers.WorkTimeController",
     "Method": "DeleteWorkTime",
-    "RelativePath": "api/WorkTime/Delete",
+    "RelativePath": "api/WorkTime/Delete/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -366,7 +404,7 @@
       {
         "Name": "id",
         "Type": "System.String",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -388,6 +426,54 @@
         "Name": "id",
         "Type": "System.String",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Auto_Circuit.Controllers.WorkTimeController",
+    "Method": "approveWorkTime",
+    "RelativePath": "api/WorkTime/update/approve/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Auto_Circuit.Controllers.WorkTimeController",
+    "Method": "rejecteWorkTime",
+    "RelativePath": "api/WorkTime/update/reject/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Auto_Circuit.Controllers.WorkTimeController",
+    "Method": "GetWorkTimeByUser",
+    "RelativePath": "api/WorkTime/User/{UserId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "UserId",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

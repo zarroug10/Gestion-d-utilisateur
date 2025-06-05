@@ -15,10 +15,16 @@ public class BaseRepository(CircuitContext context) : IRepository
 
     public async Task DeleteAsync<T>(string id) where T : class
     {
-        var ItemToDelete = await GetByIdAsync<T>(id);
-        context.Set<T>().Remove(ItemToDelete);
+        var itemToDelete = await context.Set<T>().FindAsync(id);
+        if (itemToDelete == null)
+        {
+            throw new Exception($"Item of type {typeof(T).Name} with ID '{id}' not found.");
+        }
+
+        context.Set<T>().Remove(itemToDelete);
         await context.SaveChangesAsync();
     }
+
 
     public async Task<T> GetByIdAsync<T>(string id) where T : class
     {
@@ -34,9 +40,9 @@ public class BaseRepository(CircuitContext context) : IRepository
                 throw new Exception("Item is not Found !");
             }
         }
-        catch
+        catch (Exception ex)
         {
-            throw new Exception("Server Error");
+            throw new Exception("Server Error", ex);
         }
     }
 

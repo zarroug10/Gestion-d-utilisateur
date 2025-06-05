@@ -35,14 +35,17 @@ public class UserRepository(BaseRepository context, IMapper mapper, CircuitConte
             throw new Exception(ex.Message);
         }
     }
-    public async Task<IEnumerable<UserDTo>> GetAllUsersAsync()
+    public async Task<IEnumerable<UserDTo>> GetAllUsersAsync(string search)
     {
         // Get basic user data without the roles
-        var users = await context.GetData<User>()
-            .AsNoTracking()
-            .Include(u => u.ContractId)
-            .Include(u => u.Vacations)
-            .AsSplitQuery()
+        var query = context.GetData<User>().AsNoTracking().AsSplitQuery();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(u => EF.Functions.Like(u.UserName.ToLower(), $"%{search.ToLower()}%"));
+        }
+
+        var users = await query
             .ProjectTo<UserDTo>(mapper.ConfigurationProvider)
             .ToListAsync();
 

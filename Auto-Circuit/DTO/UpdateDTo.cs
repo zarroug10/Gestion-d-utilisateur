@@ -17,4 +17,6 @@ public class UpdateDTo
     [StringLength(50)]
     public string? Status { get; set; }
 
+    public ContractDto ContractDto { get; set; }
+
 }
