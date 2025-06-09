@@ -53,12 +53,13 @@ public class MonthController(MonthlySpentRepository monthly) : ControllerBase
         return Ok(updatedspent);
     }
 
-    [HttpDelete("Delete")]
-    public IActionResult DeleteSpent(string id)
+    [HttpDelete("Delete/{id}")]
+    public async Task<IActionResult> DeleteSpent(string id)
     {
         try
         {
-            return Ok(monthly.DeleteSpent(id));
+            await monthly.DeleteSpent(id);
+            return Ok("Deleted successfully");
         }
         catch (Exception ex)
         {

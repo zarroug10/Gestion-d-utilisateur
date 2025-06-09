@@ -2,6 +2,7 @@
 
 public class MonthlySpentDTo
 {
+    public string id { get; set; }
     public decimal TotalAmount { get; set; }
     public string? Month { get; set; }
     public int Year { get; set; }
