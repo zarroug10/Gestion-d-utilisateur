@@ -59,11 +59,11 @@ public class MonthController(MonthlySpentRepository monthly) : ControllerBase
         try
         {
             await monthly.DeleteSpent(id);
-            return Ok("Deleted successfully");
+            return Ok(new { message = "Deleted successfully" });
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
 
@@ -76,7 +76,7 @@ public class MonthController(MonthlySpentRepository monthly) : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
 }

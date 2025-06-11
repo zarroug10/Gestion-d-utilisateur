@@ -2,7 +2,7 @@
 
 public class MonthlySpentDTo
 {
-    public string id { get; set; }
+    public string id { get; set; } = Guid.NewGuid().ToString();
     public decimal TotalAmount { get; set; }
     public string? Month { get; set; }
     public int Year { get; set; }

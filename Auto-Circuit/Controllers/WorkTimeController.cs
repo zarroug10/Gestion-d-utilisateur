@@ -129,11 +129,11 @@ public class WorkTimeController(WorkTimeRepository workTimeRepository, ICurrentU
         try
         {
             await workTimeRepository.ApproveWorkTime(id);
-            return Ok("WorkTime updated successfully.");
+            return Ok(new { message = "WorkTime updated successfully." });
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
 
@@ -143,11 +143,11 @@ public class WorkTimeController(WorkTimeRepository workTimeRepository, ICurrentU
         try
         {
             await workTimeRepository.rejectWorkTime(id);
-            return Ok("WorkTime updated successfully.");
+            return Ok(new { message = "WorkTime updated successfully." });
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
 }

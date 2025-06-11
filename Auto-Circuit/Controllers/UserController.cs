@@ -86,7 +86,7 @@ public class UserController : ControllerBase
             _mapper.Map(updateDTo, user);
             _mapper.Map(updateDTo.ContractDto, contracts);
 
-            await _userManager.UpdateAsync(user);
+            var user21 = await _userManager.UpdateAsync(user);
             await _dbContext.SaveChangesAsync();
             return NoContent();
         }
