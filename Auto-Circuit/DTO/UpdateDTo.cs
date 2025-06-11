@@ -11,7 +11,7 @@ public class UpdateDTo
     [StringLength(100)]
     public string? Email { get; set; }
 
-    [StringLength(7)]
+    [StringLength(8)]
     public string? Cin { get; set; }
 
     [StringLength(50)]
