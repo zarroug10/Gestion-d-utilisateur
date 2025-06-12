@@ -26,10 +26,12 @@ public class UserController : ControllerBase
     private readonly IMapper _mapper;
     private readonly ICurrentUser _currentUser;
     private readonly CircuitContext _dbContext;
+    private readonly SignInManager<User> _signInManager;
 
     public UserController(
         UserRepository userRepository,
         UserManager<User> userManager,
+        SignInManager<User> signInManager,
         EmailSenderService emailSenderService,
         IMapper mapper,
         ICurrentUser currentUser,
@@ -37,6 +39,7 @@ public class UserController : ControllerBase
     {
         _userRepository = userRepository;
         _userManager = userManager;
+        _signInManager = signInManager;
         _mapper = mapper;
         _currentUser = currentUser;
         _dbContext = circuitContext;
@@ -86,8 +89,19 @@ public class UserController : ControllerBase
             _mapper.Map(updateDTo, user);
             _mapper.Map(updateDTo.ContractDto, contracts);
 
-            var user21 = await _userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
             await _dbContext.SaveChangesAsync();
+
+            if (id == null || id == _currentUser.UserId)
+            {
+                await _signInManager.RefreshSignInAsync(user);
+            }
+
             return NoContent();
         }
         catch (Exception ex)
