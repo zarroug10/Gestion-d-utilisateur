@@ -44,6 +44,7 @@ builder.Services.AddIdentity<User, Role>(
         opt.Password.RequireLowercase = true;
         opt.Password.RequireNonAlphanumeric = true;
         opt.Password.RequireUppercase = true;
+        opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
     })
     .AddEntityFrameworkStores<CircuitContext>()
     .AddClaimsPrincipalFactory<ApplicationClaimsFactory>()

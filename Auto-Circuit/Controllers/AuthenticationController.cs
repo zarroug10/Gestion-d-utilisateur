@@ -90,7 +90,6 @@ public class AuthenticationController : ControllerBase
 
         return BadRequest(ModelState);
     }
-
     private async Task SendConfirmationEmail(string email, User user)
     {
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
